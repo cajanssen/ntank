@@ -15,9 +15,12 @@ redColor = pygame.Color(200, 100, 100)
 mtank = Tank("MAIN")
 mtank.setLocation(200, 300)
 
+tankSpeed = 5
+
 while True:
     surface.fill(backgroundColor)  # blank the screen at the start of the loop
     mtank.draw(surface)  # draw tank at its current location
+    mtank.calculateTurretVector(pygame.mouse.get_pos())
     for event in pygame.event.get():
         # if event.type == QUIT:  # event from closing the windows [can also do direct equality comparison]
         if event.type in (QUIT,):  # event from closing the window
@@ -25,20 +28,23 @@ while True:
             sys.exit()
         if event.type == MOUSEBUTTONDOWN:
             print("fire")
+            mouseLoc = pygame.mouse.get_pos()  # if mouse leaves window returns last location
+            print("Mouse at: ", mouseLoc)
+            print ("turret vector: ", mtank.getTurretVector())
     keyboard = pygame.key.get_pressed()  # get list booleans representing state of keyboard keys
     if keyboard[pygame.K_a]:
-        mtank.move(-2, 0)
+        mtank.move(-tankSpeed, 0)
     if keyboard[pygame.K_d]:
-        mtank.move(2, 0)
+        mtank.move(tankSpeed, 0)
     if keyboard[pygame.K_w]:
-        mtank.move(0, -2)
+        mtank.move(0, -tankSpeed)
     if keyboard[pygame.K_s]:
-        mtank.move(0, 2)
+        mtank.move(0, tankSpeed)
 
     #pygame.draw.line(surface, redColor, [100, 100], [400, 200])  # draw line, apparently takes tuples or lists
     #pygame.display.update()  # redraw part/all of the screen (swap the back buffer with the front buffer)
     pygame.display.flip()  # redraw the screen (swap the back buffer with the front buffer)
-    fpsClock.tick(30)
+    fpsClock.tick(30) # inserts a pause so that it runs at the specified frames per second
 
 print("End of script")  # never reached because program exits at sys.exit() inside loop
 
