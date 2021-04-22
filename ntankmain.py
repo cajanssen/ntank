@@ -1,6 +1,7 @@
 import pygame, os, sys, Tank
 from pygame.locals import *
 from Tank import *
+from Shot import *
 
 
 print("Start of script")
@@ -8,19 +9,22 @@ print("SDL version ", pygame.get_sdl_version())
 
 pygame.init()
 fpsClock = pygame.time.Clock()  # create an instance of a clock
-surface = pygame.display.set_mode((800,600))  # create a drawing surface
+surface = pygame.display.set_mode((1200,900))  # create a drawing surface
 backgroundColor = pygame.Color(100,149,237)  # create a blue color for use as background
 redColor = pygame.Color(200, 100, 100)
 
-mtank = Tank("MAIN")
-mtank.setLocation(200, 300)
+mTank = Tank("MAIN")
+mTank.setLocation(200, 300)
+mShotList = []
+mShotCount = 0
+mShotMax = 5
 
 tankSpeed = 5
 
 while True:
     surface.fill(backgroundColor)  # blank the screen at the start of the loop
-    mtank.draw(surface)  # draw tank at its current location
-    mtank.calculateTurretVector(pygame.mouse.get_pos())
+    mTank.draw(surface)  # draw tank at its current location
+    mTank.calculateTurretVector(pygame.mouse.get_pos())
     for event in pygame.event.get():
         # if event.type == QUIT:  # event from closing the windows [can also do direct equality comparison]
         if event.type in (QUIT,):  # event from closing the window
@@ -30,16 +34,24 @@ while True:
             print("fire")
             mouseLoc = pygame.mouse.get_pos()  # if mouse leaves window returns last location
             print("Mouse at: ", mouseLoc)
-            print ("turret vector: ", mtank.getTurretVector())
+            print ("turret vector: ", mTank.getTurretVector())
+            # add shot decay and removal, change addition from append()
+            if mShotCount < mShotMax:
+                mShotList.append(Shot(mTank.getTurretEnd(), mTank.getTurretVector(), 10, 5))
+                mShotCount += 1
+    for mShot in mShotList:
+        mShot.draw(surface)
+        mShot.updateLocation()
+
     keyboard = pygame.key.get_pressed()  # get list booleans representing state of keyboard keys
     if keyboard[pygame.K_a]:
-        mtank.move(-tankSpeed, 0)
+        mTank.move(-tankSpeed, 0)
     if keyboard[pygame.K_d]:
-        mtank.move(tankSpeed, 0)
+        mTank.move(tankSpeed, 0)
     if keyboard[pygame.K_w]:
-        mtank.move(0, -tankSpeed)
+        mTank.move(0, -tankSpeed)
     if keyboard[pygame.K_s]:
-        mtank.move(0, tankSpeed)
+        mTank.move(0, tankSpeed)
 
     #pygame.draw.line(surface, redColor, [100, 100], [400, 200])  # draw line, apparently takes tuples or lists
     #pygame.display.update()  # redraw part/all of the screen (swap the back buffer with the front buffer)

@@ -8,6 +8,7 @@ class Tank:
         self.name = name
         self.maincolor = pygame.Color(30, 30, 30)
         print("created tank named = " , self.name)
+        # if change x,y coordinates for stuff to list - less parameters, but harder to verify?
         self.xloc = 0
         self.yloc = 0
         self.xvec = 0
@@ -17,11 +18,13 @@ class Tank:
         
         self.tradius = 50
 
-    def draw(self, psurface):
+    def draw(self, pSurface):
         #pygame.draw.line(psurface, self.maincolor, [px, py], [px + 200, py + 200], 4)
-        pygame.draw.circle(psurface, self.maincolor, [self.xloc, self.yloc], self.tradius, 4) #surface, color, center, radius, width
+        pygame.draw.circle(pSurface, self.maincolor, [self.xloc, self.yloc], self.tradius, 4) #surface, color, center, radius, width
         # simple turret
-        pygame.draw.line(psurface, self.maincolor, [self.xloc, self.yloc], [(self.xloc + (self.xvec * self.tradius)), (self.yloc + (self.yvec * self.tradius))], 4)
+        self.turretEndx = (self.xloc + (self.xvec * self.tradius))
+        self.turretEndy = (self.yloc + (self.yvec * self.tradius))
+        pygame.draw.line(pSurface, self.maincolor, [self.xloc, self.yloc], [self.turretEndx, self.turretEndy], 4)
 
     def setLocation(self, px, py):
         self.xloc = px
